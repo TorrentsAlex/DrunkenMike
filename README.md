@@ -17,8 +17,8 @@ from his beloved country.
 ### Gameplay
 
 here you can see a video of the prototype we have now, without Libgdx
-[![Drunken Mike gameplay](http://imgur.com/7WcU91p)]
-(https://www.youtube.com/watch?v=01MVSw8SHfM&feature=youtu.be "Drunken Mike gameplay")
+[![Drunken Mike gameplay](http://i.imgur.com/7WcU91p.png?1)]
+(https://youtu.be/01MVSw8SHfM?t=7s "Drunken Mike gameplay")
 
 #### Final version
 
