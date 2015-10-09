@@ -16,6 +16,10 @@ from his beloved country.
 
 ### Gameplay
 
+here you can see a video of the prototype we have now, without Libgdx
+[![Drunken Mike gameplay](http://imgur.com/7WcU91p)]
+(https://www.youtube.com/watch?v=01MVSw8SHfM&feature=youtu.be "Drunken Mike gameplay")
+
 #### Final version
 
 The gameplay is a simple shoot and run with touch screen mechanics. 
