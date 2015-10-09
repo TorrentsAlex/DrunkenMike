@@ -34,6 +34,8 @@ Artist: Pol casamiquela https://github.com/pcasamiquela
 Developer: Alex Torrents https://github.com/torrentsalex
 
 
+## License
+
 The MIT License (MIT)
 
 Copyright (c) 2015 Alex Torrents
