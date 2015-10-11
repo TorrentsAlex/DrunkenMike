@@ -1,5 +1,12 @@
 package com.turri.models;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,39 +27,50 @@ public class Farmer {
 	private String name;
 	private int currentCostume = 0;
 	public boolean isJumpOn = false;
-	private BitmapDrawable[] graphic = new BitmapDrawable[12];
+
+	TextureRegion[] walkFrames;
+	TextureRegion currentFrame;
+	Animation walkAnimation;
+	SpriteBatch spriteBatch;
+	float stateTime;
+	//private BitmapDrawable[] graphic = new BitmapDrawable[12];
 	// array de bitmaps para los sprites
 	// un bitmap aparte para las muertes
-	private Paint paint;
+	//private Paint paint;
 
-	public Farmer(float x, float y, string resource) {
-		this.context = context;
+	public Farmer(float x, float y, String resource) {
 		this.x = x;
 		this.y = y;
 		this.initY = y;
 		this.yMIN = y;
-
-		paint = new Paint();
-	}
-
-	public void setCostumes(int[] outfits) {
-		for (int i = 0; i < outfits.length; i++) {
-			graphic[i] = (BitmapDrawable) context.getResources().getDrawable(
-					outfits[i]);
+		Texture texture = new Texture(resource);
+		TextureRegion[] tmp = TextureRegion.split(texture ,texture.getWidth()/11 ,texture.getHeight())[0];
+		walkFrames = new TextureRegion[11];
+		for (int i=0; i < 11; i++) {
+			walkFrames[i] = tmp[i];
 		}
+
+		walkAnimation = new Animation(1/11f, walkFrames);
+
+		spriteBatch = new SpriteBatch();
+		stateTime = 0f;
 	}
+
 
 	public void goTo(float xPos, float yPos) {
 		this.x = xPos;
 		this.y = yPos;
 	}
 
-	public void render() {
-		if (this.isJumpOn) {
-			this.jump();
-		}
-		c.drawBitmap(this.getBitmap(), this.getX(), this.getY(),
-				this.getPaint());
+	public void draw() {
+		/// update method
+		stateTime += Gdx.graphics.getDeltaTime();
+		currentFrame = walkAnimation.getKeyFrame(stateTime, true);
+		///
+		spriteBatch.begin();
+		spriteBatch.draw(currentFrame, this.x, this.y);
+		spriteBatch.end();
+
 	}
 
 	public void jump() {
@@ -93,10 +111,6 @@ public class Farmer {
 		return name;
 	}
 
-	public Bitmap getBitmap() {
-		setCurrentCostume();
-		return graphic[currentCostume].getBitmap();
-	}
 
 	public void setDead(boolean dead) {
 		this.dead = dead;
@@ -109,31 +123,16 @@ public class Farmer {
 		this.isJumpOn = jump;
 	}
 
-	public Paint getPaint() {
-		if (detected) {
-			if (imageBlink) {
-				imageBlink = false;
-				paint.setAlpha(0);
-			} else {
-				imageBlink = true;
-				paint.setAlpha(255);
-			}
-		} else {
-			paint.setAlpha(255);
-		}
-		return paint;
-	}
-
-	public void timerCollision() {
-		TimerTask task = new TimerTask() {
-			@Override
-			public void run() {
-				Looper.prepare();
-				detected = false;
-				Looper.loop();
-			}
-		};
-		Timer timer = new Timer();
-		timer.schedule(task, 2000);
-	}
+//	public void timerCollision() {
+//		TimerTask task = new TimerTask() {
+//			@Override
+//			public void run() {
+//				Looper.prepare();
+//				detected = false;
+//				Looper.loop();
+//			}
+//		};
+//		Timer timer = new Timer();
+//		timer.schedule(task, 2000);
+//	}
 }
