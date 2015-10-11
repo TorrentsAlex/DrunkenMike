@@ -1,45 +1,43 @@
 package com.turri.models;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+
+import com.badlogic.gdx.graphics.Texture;
 
 public class Background {
-	private Context context;
 	private int x;
 	private int y;
-	private BitmapDrawable image;
+	Texture background;
 	
-	
-	public Background (Context context, int x, int y, int image) {
-		this.context = context;
+	public Background (int x, int y, String resource) {
 		this.x = x;
 		this.y = y;
-		this.image = (BitmapDrawable)context.getResources().getDrawable(image);
+		background = new Texture(resource);
 	}
 	
 	public void moveBackground (int x) {
 		this.x -= x;
 	}
 	
-	public BitmapDrawable getBitmapDrawable() {
-		return image;
-	}
-	
-	public Bitmap getBitmap() {
-		return image.getBitmap();
-	}
+//	public BitmapDrawable getBitmapDrawable() {
+//		return image;
+//	}
+//
+//	public Bitmap getBitmap() {
+//		return image.getBitmap();
+//	}
 	
 	public void setX(int x) {
 		this.x = x;
+	}
+	public Texture getTexture() {
+		return this.background;
 	}
 	
 	public int getX() {
 		return this.x;
 	}
-	
 	public int getWitdh() {
-		return image.getBitmap().getWidth();
+		return background.getWidth();
 	}
 	public int getY() {
 		return this.y;
