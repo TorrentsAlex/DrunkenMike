@@ -26,8 +26,9 @@ public class TurriGame extends ApplicationAdapter implements imageManagerInterfa
 	public void create () {
 		batch = new SpriteBatch();
 
-		manager = new ImageManager(this);
-		manager.loadImages(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		manager = ImageManager.sharedManager();
+        manager.setImageManagerInterface(this);
+        manager.loadImages(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.input.setInputProcessor(new GestureDetector(new TurriListener()));
 	}
 
@@ -36,18 +37,19 @@ public class TurriGame extends ApplicationAdapter implements imageManagerInterfa
 		//TODO:: change this with play states
 		if (!imagesLoaded) {
 			return;
-		}
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        }
+        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		manager.drawBackground(batch);
-		manager.drawEnemies(batch);
+        manager.drawBackground(batch);
+        manager.drawEnemies(batch);
 		batch.end();
 
 		// Draw sprites after end batch, the sprites uses other batch to render the texture
 		manager.drawFarmer();
 
 		// Update positions
+        manager.updateFarmer();
 		manager.updateEnemies();
 		manager.updateBackground();
 	}
