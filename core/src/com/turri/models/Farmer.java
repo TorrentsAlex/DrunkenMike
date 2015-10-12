@@ -19,13 +19,9 @@ public class Farmer {
 
 	private boolean dead = false;
 
-	private float gravity = -3f;
+	private float gravity = -10f;
 	private float velocity = 45;
 
-	public boolean detected = false;
-	private boolean imageBlink = true;
-	private String name;
-	private int currentCostume = 0;
 	public boolean isJumpOn = false;
 
 	TextureRegion[] walkFrames;
@@ -56,12 +52,6 @@ public class Farmer {
 		stateTime = 0f;
 	}
 
-
-	public void goTo(float xPos, float yPos) {
-		this.x = xPos;
-		this.y = yPos;
-	}
-
 	public void draw() {
 		/// update method
 		stateTime += Gdx.graphics.getDeltaTime();
@@ -73,7 +63,16 @@ public class Farmer {
 
 	}
 
-	public void jump() {
+    /**
+     * update the mike's state, running, jumping, dead
+     */
+    public void updateState() {
+        if (isJumpOn) {
+            jump();
+        }
+    }
+
+	private void jump() {
 		velocity += gravity;
 		this.y -= velocity;
 		if (y >= yMIN && !dead) {
@@ -87,17 +86,6 @@ public class Farmer {
 		this.velocity = gravity;
 	}
 
-	public void setCurrentCostume() {
-		if (dead) {
-			currentCostume = 11;
-		} else {
-			currentCostume++;
-			if (currentCostume >= 11) {
-				currentCostume = 0;
-			}
-		}
-	}
-
 	// Get Functions
 	public float getX() {
 		return x;
@@ -106,11 +94,6 @@ public class Farmer {
 	public float getY() {
 		return y;
 	}
-
-	public String getName() {
-		return name;
-	}
-
 
 	public void setDead(boolean dead) {
 		this.dead = dead;
@@ -123,16 +106,5 @@ public class Farmer {
 		this.isJumpOn = jump;
 	}
 
-//	public void timerCollision() {
-//		TimerTask task = new TimerTask() {
-//			@Override
-//			public void run() {
-//				Looper.prepare();
-//				detected = false;
-//				Looper.loop();
-//			}
-//		};
-//		Timer timer = new Timer();
-//		timer.schedule(task, 2000);
-//	}
+
 }
