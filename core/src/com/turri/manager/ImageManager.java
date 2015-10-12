@@ -7,26 +7,19 @@ import com.turri.models.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class ImageManager {
 
-    private static ImageManager imageManager = null;
+    private static ImageManager imageManager ;
 
-    private float screenWidth;
-    private float screenHeight;
-
-
-    //
     private Farmer farmer;
     private List<Enemy> enemies;
 
 //	private List<Enemy> straws;
 //	private List<Bullet> bullets = new ArrayList<Bullet>();
-    private Background[] listBackground;
-    private Background[] listBackground1;
+    private Background[] aBackgrounds;
+    private Background[] aBackgrounds1;
     private float backgroundWidth = 0;
 
     private int maxXEnemy = 0;
@@ -48,14 +41,13 @@ public class ImageManager {
     }
 
     public ImageManager() {
-
     }
 
-    public ImageManager(imageManagerInterface handler) {
+    public void setImageManagerInterface(imageManagerInterface handler) {
         this.managerInterface = handler;
     }
 
-    public void loadImages(float screeenWidth,
+    public void loadImages(float screenWidth,
                            float screenHeight) {
         float width20percent;
         float height20percent;
@@ -63,9 +55,7 @@ public class ImageManager {
         float height60percent;
         float height80percent;
         random = new Random();
-        this.screenWidth = screeenWidth;
-        this.screenHeight = screenHeight;
-        width20percent = screeenWidth * 0.10f;
+        width20percent = screenWidth * 0.10f;
 
         height20percent = screenHeight * 0.15f;
         height40percent = screenHeight * 0.30f;
@@ -73,16 +63,16 @@ public class ImageManager {
         height80percent = screenHeight * 0.70f;
 
         // capa1
-        listBackground = new Background[2];
-        listBackground1 = new Background[2];
+        aBackgrounds = new Background[2];
+        aBackgrounds1 = new Background[2];
 
         //Background background = new Background(context, 0, 0, R.drawable.capa1);
-        listBackground[0] = new Background(0, 0, "background1_1.png", Background.BackgroundType.LAST_BACKGROUND);
-        backgroundWidth = listBackground[0].getWitdh();
-        listBackground[1] = new Background((int) backgroundWidth, 0, "background1_1.png",Background.BackgroundType.LAST_BACKGROUND);
+        aBackgrounds[0] = new Background(0, 0, "background1_1.png", Background.BackgroundType.LAST_BACKGROUND);
+        backgroundWidth = aBackgrounds[0].getWitdh();
+        aBackgrounds[1] = new Background((int) backgroundWidth, 0, "background1_1.png",Background.BackgroundType.LAST_BACKGROUND);
 
-        listBackground1[0] = new Background(0, 0, "background2_2.png",Background.BackgroundType.FIRST_BACKGROUND);
-        listBackground1[1] = new Background((int)backgroundWidth, 0, "background2_2.png",Background.BackgroundType.FIRST_BACKGROUND);
+        aBackgrounds1[0] = new Background(0, 0, "background2_2.png",Background.BackgroundType.FIRST_BACKGROUND);
+        aBackgrounds1[1] = new Background((int)backgroundWidth, 0, "background2_2.png",Background.BackgroundType.FIRST_BACKGROUND);
 
 		float[] heighs = {height20percent, height40percent, height60percent};
 
@@ -95,7 +85,6 @@ public class ImageManager {
 		}
 
         farmer = new Farmer(width20percent, height80percent, "mikespritesheet.png");
-//		farmer.setCostumes(farmerCostumes);
 
 //		for (int i=0; i<5; i++) {
 //			maxXStraws += random.nextInt(2500);
@@ -103,50 +92,51 @@ public class ImageManager {
 //							height80percent,"straws", R.drawable.straw));
 //		}
 
-        // this callback mark when the enemies, player and background has been
-        // loaded
-
+        // this callback call when the enemies, player and background has been loaded
         this.managerInterface.imagesLoaded();
     }
 
-    // Characters
-    public Farmer getFarmer() {
-        return this.farmer;
-    }
-
+    // Character
     public void drawFarmer() {
         this.farmer.draw();
     }
 
-    public void drawEnemies(Batch bach) {
-        for (Enemy e : enemies) {
-            bach.draw(e.getTexture(), e.getX(), e.getY());
-        }
+    public void jumpFarmer() {
+        this.farmer.setJumping(true);
     }
-    public void updateEnemies() {
-        for(Enemy e : enemies) {
-            e.goTo(e.getX() - 10, e.getY());
+
+    public void updateFarmer() {
+        this.farmer.updateState();
+    }
+
+    // Enemy method
+    public void drawEnemies(Batch batch) {
+        for (Enemy e : enemies) {
+            e.drawEnemy(batch);
         }
     }
 
-    //	public List<Enemy> getStraws() {
-//		return this.straws;
-//	}
-//
+    public void updateEnemies() {
+        for(Enemy e : enemies) {
+            e.updateEnemy();
+        }
+    }
+
+    // Background methods
     public void drawBackground(Batch batch) {
-        for (Background bc : listBackground) {
+        for (Background bc : aBackgrounds) {
             bc.drawBackground(batch);
         }
-        for (Background bc2 : listBackground1) {
+        for (Background bc2 : aBackgrounds1) {
             bc2.drawBackground(batch);
         }
     }
 
     public void updateBackground () {
-        for (Background bc : listBackground) {
+        for (Background bc : aBackgrounds) {
             bc.updateBackground();
         }
-        for (Background bc2 : listBackground1) {
+        for (Background bc2 : aBackgrounds1) {
             bc2.updateBackground();
         }
     }
