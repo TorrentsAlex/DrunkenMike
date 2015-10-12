@@ -81,7 +81,7 @@ public class ImageManager {
         listBackground[1] = new Background((int) backgroundWidth, 0, "background1_1.png");
 
         listBackground1[0] = new Background(0, 0, "background2_2.png");
-        listBackground1[1] = new Background((int) listBackground1[0].getWitdh(), 0, "background2_2.png");
+        listBackground1[1] = new Background((int)backgroundWidth, 0, "background2_2.png");
 //
 //		float[] heighs = { height20percent, height40percent, height60percent};
 
@@ -94,23 +94,16 @@ public class ImageManager {
 //		}
 
         farmer = new Farmer(width20percent, height80percent, "mikespritesheet.png");
-        // Set costume for dead mode
-//		int[] farmerCostumes = { R.drawable.run1, R.drawable.run2,
-//				R.drawable.run3, R.drawable.run4, R.drawable.run5,
-//				R.drawable.run6, R.drawable.run7, R.drawable.run8,
-//				R.drawable.run9, R.drawable.run10, R.drawable.run11,
-//				R.drawable.jump };
 //		farmer.setCostumes(farmerCostumes);
 
 //		for (int i=0; i<5; i++) {
 //			maxXStraws += random.nextInt(2500);
-//			straws.add(new Enemy(context, screeenWidth+maxXStraws+3000, /* repito, este mil es para que no se quede junto*/
+//			straws.add(new Enemy(context, screeenWidth+maxXStraws+3000,
 //							height80percent,"straws", R.drawable.straw));
 //		}
 
         // this callback mark when the enemies, player and background has been
         // loaded
-        System.gc();
 
         this.managerInterface.imagesLoaded();
     }
