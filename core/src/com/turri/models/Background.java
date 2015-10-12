@@ -1,34 +1,31 @@
 package com.turri.models;
 
-
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class Background {
 	private int x;
 	private int y;
-	Texture background;
-	
-	public Background (int x, int y, String resource) {
+	private Texture background;
+	private int backgroundType;
+
+	public interface BackgroundType {
+		static int LAST_BACKGROUND = 0;
+		static int MIDDLE_BACKGROUND = 1;
+		static int FIRST_BACKGROUND = 2;
+	}
+
+	public Background (int x, int y, String resource, int backgroundType) {
 		this.x = x;
 		this.y = y;
-		background = new Texture(resource);
+		this.background = new Texture(resource);
+		this.backgroundType = backgroundType;
 	}
-	
-	public void moveBackground (int x) {
-		this.x -= x;
-	}
-	
-//	public BitmapDrawable getBitmapDrawable() {
-//		return image;
-//	}
-//
-//	public Bitmap getBitmap() {
-//		return image.getBitmap();
-//	}
-	
+
 	public void setX(int x) {
 		this.x = x;
 	}
+
 	public Texture getTexture() {
 		return this.background;
 	}
@@ -36,10 +33,39 @@ public class Background {
 	public int getX() {
 		return this.x;
 	}
+
 	public int getWitdh() {
-		return background.getWidth();
+		return this.background.getWidth();
 	}
-	public int getY() {
-		return this.y;
+
+	public void drawBackground(Batch batch) {
+		batch.draw(this.getTexture(), this.getX(), 0);
+	}
+
+	public void updateBackground() {
+		moveBackground();
+		restartBackground();
+	}
+
+	private void moveBackground() {
+		// Moving background dependently if be in front or back
+		switch(backgroundType) {
+			case BackgroundType.LAST_BACKGROUND:
+				this.x -= 4;
+				break;
+			case BackgroundType.MIDDLE_BACKGROUND:
+				this.x -= 6;
+				break;
+			case BackgroundType.FIRST_BACKGROUND:
+				this.x -= 8;
+				break;
+		}
+	}
+
+	private void restartBackground() {
+		// When the background is out of the screen restart the position
+		if (-1 * this.getX() >= this.getWitdh()) {
+			this.setX(this.getWitdh());
+		}
 	}
 }

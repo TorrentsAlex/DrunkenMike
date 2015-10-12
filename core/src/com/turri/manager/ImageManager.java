@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.turri.interfaces.imageManagerInterface;
 import com.turri.models.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,22 +18,16 @@ public class ImageManager {
     private float screenWidth;
     private float screenHeight;
 
-    private float width20percent;
-    private float height20percent;
-    private float height40percent;
-    private float height60percent;
-    private float height80percent;
+
     //
     private Farmer farmer;
-    //	private List<Enemy> enemies;
+    private List<Enemy> enemies;
+
 //	private List<Enemy> straws;
 //	private List<Bullet> bullets = new ArrayList<Bullet>();
     private Background[] listBackground;
     private Background[] listBackground1;
     private float backgroundWidth = 0;
-
-    private int currentBackground = 0;
-    private int currentBackground1 = 0;
 
     private int maxXEnemy = 0;
     private int maxXStraws = 0;
@@ -61,6 +57,11 @@ public class ImageManager {
 
     public void loadImages(float screeenWidth,
                            float screenHeight) {
+        float width20percent;
+        float height20percent;
+        float height40percent;
+        float height60percent;
+        float height80percent;
         random = new Random();
         this.screenWidth = screeenWidth;
         this.screenHeight = screenHeight;
@@ -76,22 +77,22 @@ public class ImageManager {
         listBackground1 = new Background[2];
 
         //Background background = new Background(context, 0, 0, R.drawable.capa1);
-        listBackground[0] = new Background(0, 0, "background1_1.png");
+        listBackground[0] = new Background(0, 0, "background1_1.png", Background.BackgroundType.LAST_BACKGROUND);
         backgroundWidth = listBackground[0].getWitdh();
-        listBackground[1] = new Background((int) backgroundWidth, 0, "background1_1.png");
+        listBackground[1] = new Background((int) backgroundWidth, 0, "background1_1.png",Background.BackgroundType.LAST_BACKGROUND);
 
-        listBackground1[0] = new Background(0, 0, "background2_2.png");
-        listBackground1[1] = new Background((int)backgroundWidth, 0, "background2_2.png");
-//
-//		float[] heighs = { height20percent, height40percent, height60percent};
+        listBackground1[0] = new Background(0, 0, "background2_2.png",Background.BackgroundType.FIRST_BACKGROUND);
+        listBackground1[1] = new Background((int)backgroundWidth, 0, "background2_2.png",Background.BackgroundType.FIRST_BACKGROUND);
+
+		float[] heighs = {height20percent, height40percent, height60percent};
 
         // START ENEMIES
-//		enemies = new ArrayList<Enemy>();
-//		for (int i = 0; i < 20 ; i++) {
-//			maxXEnemy += random.nextInt(1000);
-//			enemies.add(new Enemy(context, screenWidth + maxXEnemy,
-//					heighs[random.nextInt(3)], "chick", R.drawable.chicken));
-//		}
+		enemies = new ArrayList<Enemy>();
+		for (int i = 0; i < 20 ; i++) {
+			maxXEnemy += random.nextInt(1000);
+			enemies.add(new Enemy(screenWidth + maxXEnemy,
+					heighs[random.nextInt(3)], "cow.png"));
+		}
 
         farmer = new Farmer(width20percent, height80percent, "mikespritesheet.png");
 //		farmer.setCostumes(farmerCostumes);
@@ -116,10 +117,17 @@ public class ImageManager {
     public void drawFarmer() {
         this.farmer.draw();
     }
-//
-//	public List<Enemy> getEnemies() {
-//		return this.enemies;
-//	}
+
+    public void drawEnemies(Batch bach) {
+        for (Enemy e : enemies) {
+            bach.draw(e.getTexture(), e.getX(), e.getY());
+        }
+    }
+    public void updateEnemies() {
+        for(Enemy e : enemies) {
+            e.goTo(e.getX() - 10, e.getY());
+        }
+    }
 
     //	public List<Enemy> getStraws() {
 //		return this.straws;
@@ -127,80 +135,22 @@ public class ImageManager {
 //
     public void drawBackground(Batch batch) {
         for (Background bc : listBackground) {
-            batch.draw(bc.getTexture(), bc.getX(), bc.getY());
+            bc.drawBackground(batch);
         }
         for (Background bc2 : listBackground1) {
-            batch.draw(bc2.getTexture(), bc2.getX(), bc2.getY());
+            bc2.drawBackground(batch);
         }
     }
 
     public void updateBackground () {
         for (Background bc : listBackground) {
-            bc.moveBackground(4);
+            bc.updateBackground();
         }
         for (Background bc2 : listBackground1) {
-            bc2.moveBackground(7);
+            bc2.updateBackground();
         }
-        if (-1 * listBackground[currentBackground].getX() >= listBackground[currentBackground]
-                .getWitdh()) {
-            listBackground[currentBackground].setX((int) backgroundWidth);
-            currentBackground++;
-            if (currentBackground >= 2) {
-                currentBackground = 0;
-            }
-        }
-        if (-1 * listBackground1[currentBackground1].getX() >= listBackground1[currentBackground1]
-                .getWitdh()) {
-            listBackground1[currentBackground1].setX((int) backgroundWidth);
-            currentBackground1++;
-            if (currentBackground1 >= 2) {
-                currentBackground1 = 0;
-            }
-        }
-
     }
 
-
-//		if (isFinishRunnable) {
-//			isFinishRunnable = false;
-//			new Runnable() {
-//				public void run() {
-//					for (Background bcImage : listBackground) {
-//						c.drawBitmap(bcImage.getBitmap(),
-//								bcImage.getX(),
-//								bcImage.getY(), null);
-//						bcImage.moveBackground(4);
-//					}
-//					for (Background bcImage : listBackground1) {
-//						c.drawBitmap(
-//								bcImage.getBitmap(),
-//								bcImage.getX(),
-//								bcImage.getY(), null);
-//
-//						bcImage.moveBackground(7);
-//					}
-//					// current 1
-//					if (-1 * listBackground[currentBackground].getX() >= listBackground[currentBackground]
-//							.getWitdh()) {
-//						listBackground[currentBackground].setX((int)backgroundWidth);
-//						currentBackground++;
-//						if (currentBackground >= 2) {
-//							currentBackground = 0;
-//						}
-//					}
-//					// current 2
-//					if (-1 * listBackground1[currentBackground1].getX() >= listBackground1[currentBackground1]
-//							.getWitdh()) {
-//						listBackground1[currentBackground1].setX((int)backgroundWidth);
-//						currentBackground1++;
-//						if (currentBackground1 >= 2) {
-//							currentBackground1 = 0;
-//						}
-//					}
-//					isFinishRunnable = true;
-//				}
-//			}.run();
-//		}
 
 //	// Bullets
 //	public void newBullet(float finalX, float finalY) {
@@ -265,15 +215,6 @@ public class ImageManager {
 //	public List<Bullet> getBullets() {
 //		return bullets;
 //	}
-
-    // Views size
-    public float getScreenWidth() {
-        return this.screenWidth;
-    }
-
-    public float getScreenHeight() {
-        return this.screenHeight;
-    }
 
     // Utilities
     public Random getRandom() {
