@@ -2,20 +2,25 @@ package com.turri.inputs;
 
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
+import com.turri.manager.ImageManager;
 
 /**
  * Created by alex on 12/10/2015.
  */
 public class TurriListener implements GestureDetector.GestureListener {
+    ImageManager imageManager;
 
+    public TurriListener() {
+        imageManager = ImageManager.sharedManager();
+    }
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
-
         return false;
     }
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
+        imageManager.jumpFarmer();
         return false;
     }
 
