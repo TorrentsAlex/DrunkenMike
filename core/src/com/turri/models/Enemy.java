@@ -1,16 +1,13 @@
 package com.turri.models;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Enemy {
 	private float x;
 	private float y;
-	private String name;
-	private int costume;
-	private int currentCostume;
 	Sprite sprites;
-	private boolean dead = false;
 	private Texture spriteTexture;
 
 	public Enemy (float x, float y, String resource ) {
@@ -19,45 +16,37 @@ public class Enemy {
 		spriteTexture = new Texture(resource);
 	}
 	
-	public void goTo(float xPos, float yPos) {
+	private void goTo(float xPos, float yPos) {
 		this.x = xPos;
 		this.y = yPos;
 	}
 
-	public void setCurrentCostume(int i) {
-		currentCostume = i;
-	}
-
-	public void setX(float x) {
+	private void setX(float x) {
 		this.x = x;	
 	}
-	// Get Functions
-	public float getX() {
-		return x;
+	private int getWidth() {
+		return spriteTexture.getWidth();
 	}
-
-	public Texture getTexture() {
+	private Texture getTexture() {
 		return spriteTexture;
 	}
 
-	public float getY() {
-		return y;
+	private void restartEnemy() {
+		// at first not due to restart
+		//if (-1 * this.x >= this.getWidth()) {}
 	}
 
-	public String getName() {
-		return name;
+	private void moveEnemy() {
+		this.goTo(this.x - 10, this.y);
 	}
 
-	public int getCostume() {
-		return costume;
-	}
-	
-	public void setDead(boolean dead) {
-		this.dead = dead;
-	}
-	
-	public boolean getDead() {
-		return this.dead;
+	// Public methods
+	public void drawEnemy(Batch batch) {
+		batch.draw(this.spriteTexture , this.x, this.y);
 	}
 
+	public void updateEnemy() {
+		this.moveEnemy();
+		this.restartEnemy();
+	}
 }

@@ -39,7 +39,7 @@ public class Background {
 	}
 
 	public void drawBackground(Batch batch) {
-		batch.draw(this.getTexture(), this.getX(), 0);
+		batch.draw(this.getTexture(), this.x, this.y);
 	}
 
 	public void updateBackground() {
