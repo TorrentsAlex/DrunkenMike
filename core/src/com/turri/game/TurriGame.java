@@ -41,12 +41,14 @@ public class TurriGame extends ApplicationAdapter implements imageManagerInterfa
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		manager.drawBackground(batch);
+		manager.drawEnemies(batch);
 		batch.end();
 
 		// Draw sprites after end batch, the sprites uses other batch to render the texture
 		manager.drawFarmer();
 
 		// Update positions
+		manager.updateEnemies();
 		manager.updateBackground();
 	}
 

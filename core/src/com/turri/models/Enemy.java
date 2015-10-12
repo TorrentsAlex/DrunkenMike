@@ -11,12 +11,12 @@ public class Enemy {
 	private int currentCostume;
 	Sprite sprites;
 	private boolean dead = false;
+	private Texture spriteTexture;
 
 	public Enemy (float x, float y, String resource ) {
 		this.x = x;
 		this.y = y;
-		Texture spriteTexture = new Texture(resource);
-		this.sprites = new Sprite(spriteTexture,0,0,0,0);
+		spriteTexture = new Texture(resource);
 	}
 	
 	public void goTo(float xPos, float yPos) {
@@ -34,6 +34,10 @@ public class Enemy {
 	// Get Functions
 	public float getX() {
 		return x;
+	}
+
+	public Texture getTexture() {
+		return spriteTexture;
 	}
 
 	public float getY() {
