@@ -43,9 +43,10 @@ public class Enemy {
 	// Public methods
 	public void drawEnemy(Batch batch) {
 		batch.draw(this.spriteTexture , this.x, this.y);
+		updateEnemy();
 	}
 
-	public void updateEnemy() {
+	private void updateEnemy() {
 		this.moveEnemy();
 		this.restartEnemy();
 	}

@@ -1,6 +1,7 @@
 package com.turri.manager;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.turri.interfaces.imageManagerInterface;
 import com.turri.models.*;
 
@@ -84,7 +85,7 @@ public class ImageManager {
 					heighs[random.nextInt(3)], "cow.png"));
 		}
 
-        farmer = new Farmer(width20percent, height80percent, "mikespritesheet.png");
+        farmer = new Farmer(width20percent, height20percent, "mikespritesheet.png");
 
 //		for (int i=0; i<5; i++) {
 //			maxXStraws += random.nextInt(2500);
@@ -97,28 +98,18 @@ public class ImageManager {
     }
 
     // Character
-    public void drawFarmer() {
-        this.farmer.draw();
+    public void drawMike(SpriteBatch spriteBatch) {
+        this.farmer.draw(spriteBatch);
     }
 
     public void jumpFarmer() {
         this.farmer.setJumping(true);
     }
 
-    public void updateFarmer() {
-        this.farmer.updateState();
-    }
-
     // Enemy method
     public void drawEnemies(Batch batch) {
         for (Enemy e : enemies) {
             e.drawEnemy(batch);
-        }
-    }
-
-    public void updateEnemies() {
-        for(Enemy e : enemies) {
-            e.updateEnemy();
         }
     }
 
@@ -131,16 +122,6 @@ public class ImageManager {
             bc2.drawBackground(batch);
         }
     }
-
-    public void updateBackground () {
-        for (Background bc : aBackgrounds) {
-            bc.updateBackground();
-        }
-        for (Background bc2 : aBackgrounds1) {
-            bc2.updateBackground();
-        }
-    }
-
 
 //	// Bullets
 //	public void newBullet(float finalX, float finalY) {
