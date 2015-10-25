@@ -3,31 +3,27 @@ package com.turri.models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Farmer {
 
 	private float x;
 	private float y;
-	private float initY;
-	private float yMIN;
+	private float yMin;
 
 	private boolean dead = false;
 
-	private float gravity = -10f;
-	private float velocity = 45;
+	private float gravity = -2.5f;
+	private final float velocity = 45;
+	private float currentVelocity = velocity;
 
-	public boolean isJumpOn = false;
+	private boolean isDoubleJumpOn = false;
+	private boolean isJumpOn = false;
 
 	TextureRegion[] walkFrames;
 	TextureRegion currentFrame;
 	Animation walkAnimation;
-	SpriteBatch spriteBatch;
 	float stateTime;
 	//private BitmapDrawable[] graphic = new BitmapDrawable[12];
 	// array de bitmaps para los sprites
@@ -37,8 +33,7 @@ public class Farmer {
 	public Farmer(float x, float y, String resource) {
 		this.x = x;
 		this.y = y;
-		this.initY = y;
-		this.yMIN = y;
+		this.yMin = y;
 		Texture texture = new Texture(resource);
 		TextureRegion[] tmp = TextureRegion.split(texture ,texture.getWidth()/11 ,texture.getHeight())[0];
 		walkFrames = new TextureRegion[11];
@@ -47,43 +42,44 @@ public class Farmer {
 		}
 
 		walkAnimation = new Animation(1/11f, walkFrames);
-
-		spriteBatch = new SpriteBatch();
 		stateTime = 0f;
 	}
 
-	public void draw() {
-		/// update method
+	public void draw(SpriteBatch spriteBatch) {
+		// The update to be before the draw, because in the first loop currentFrame is null
+		this.update();
+		spriteBatch.draw(currentFrame, this.x, this.y);
+	}
+
+	private void update() {
 		stateTime += Gdx.graphics.getDeltaTime();
 		currentFrame = walkAnimation.getKeyFrame(stateTime, true);
-		///
-		spriteBatch.begin();
-		spriteBatch.draw(currentFrame, this.x, this.y);
-		spriteBatch.end();
-
-	}
-
-    /**
-     * update the mike's state, running, jumping, dead
-     */
-    public void updateState() {
-        if (isJumpOn) {
-            jump();
-        }
-    }
-
-	private void jump() {
-		velocity += gravity;
-		this.y -= velocity;
-		if (y >= yMIN && !dead) {
-			velocity = 45;
-			isJumpOn = false;
-			this.y = this.initY;
+		if (isJumpOn) {
+			jump();
 		}
 	}
-	
-	public void setGravity(int gravity) {
-		this.velocity = gravity;
+
+	private void jump() {
+		currentVelocity += gravity;
+		this.y += currentVelocity;
+		if (y <= yMin && !dead) {
+        	resetJump();
+        }
+	}
+
+	private void resetJump() {
+		currentVelocity = velocity;
+		isJumpOn = false;
+		isDoubleJumpOn = false;
+		this.y = this.yMin;
+	}
+
+	private void doubleJump() {
+		if (isDoubleJumpOn) {
+			return;
+		}
+		currentVelocity = velocity;
+		isDoubleJumpOn = true;
 	}
 
 	// Get Functions
@@ -103,7 +99,12 @@ public class Farmer {
 		return this.dead;
 	}
 	public void setJumping(Boolean jump) {
+		// If isJump is true, it means mike is on air
+		if (this.isJumpOn) {
+			this.doubleJump();
+		}
 		this.isJumpOn = jump;
+
 	}
 
 
