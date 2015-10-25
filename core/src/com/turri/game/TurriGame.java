@@ -24,6 +24,7 @@ public class TurriGame extends ApplicationAdapter implements imageManagerInterfa
 	}
 	@Override
 	public void create () {
+
 		batch = new SpriteBatch();
 
 		manager = ImageManager.sharedManager();
@@ -43,15 +44,8 @@ public class TurriGame extends ApplicationAdapter implements imageManagerInterfa
 		batch.begin();
         manager.drawBackground(batch);
         manager.drawEnemies(batch);
+		manager.drawMike(batch);
 		batch.end();
-
-		// Draw sprites after end batch, the sprites uses other batch to render the texture
-		manager.drawFarmer();
-
-		// Update positions
-        manager.updateFarmer();
-		manager.updateEnemies();
-		manager.updateBackground();
 	}
 
 	public void imagesLoaded() {
