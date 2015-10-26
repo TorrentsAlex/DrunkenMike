@@ -35,7 +35,7 @@ For the moment we only have one infinite level, and one enemy, but it's playable
 ## Authors
 
 Artist: Pol casamiquela https://github.com/pcasamiquela
-Developer: Alex Torrents https://github.com/torrentsalex
+\nDeveloper: Alex Torrents https://github.com/torrentsalex
 
 
 ## License
