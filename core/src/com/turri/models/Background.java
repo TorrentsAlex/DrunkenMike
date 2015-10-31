@@ -40,10 +40,9 @@ public class Background {
 
 	public void drawBackground(Batch batch) {
 		batch.draw(this.getTexture(), this.x, this.y);
-		this.updateBackground();
 	}
 
-	private void updateBackground() {
+	public void updateBackground() {
 		moveBackground();
 		restartBackground();
 	}
