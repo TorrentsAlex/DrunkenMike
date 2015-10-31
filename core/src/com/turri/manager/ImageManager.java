@@ -1,6 +1,7 @@
 package com.turri.manager;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.turri.interfaces.imageManagerInterface;
 import com.turri.models.*;
@@ -8,17 +9,19 @@ import com.turri.models.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class ImageManager {
 
-    private static ImageManager imageManager ;
+    private static ImageManager imageManager;
 
-    private Farmer farmer;
+    private Mike mike;
     private List<Enemy> enemies;
+    private String projectileString;
 
-//	private List<Enemy> straws;
-//	private List<Bullet> bullets = new ArrayList<Bullet>();
+    //	private List<Enemy> straws;
     private Background[] aBackgrounds;
     private Background[] aBackgrounds1;
     private float backgroundWidth = 0;
@@ -26,13 +29,12 @@ public class ImageManager {
     private int maxXEnemy = 0;
     private int maxXStraws = 0;
 
+    private BulletManager bManager;
     private Random random;
-    private boolean newBullet = true;
     private boolean isFinishRunnable = true;
 
-    private static int TIMER_BULLET = 1000;
-
     private imageManagerInterface managerInterface;
+    ParticleEffect pe;
 
     public static ImageManager sharedManager() {
         if (imageManager == null) {
@@ -56,6 +58,8 @@ public class ImageManager {
         float height60percent;
         float height80percent;
         random = new Random();
+        this.bManager = BulletManager.shareBulletManager();
+
         width20percent = screenWidth * 0.10f;
 
         height20percent = screenHeight * 0.15f;
@@ -66,126 +70,140 @@ public class ImageManager {
         // capa1
         aBackgrounds = new Background[2];
         aBackgrounds1 = new Background[2];
-
         //Background background = new Background(context, 0, 0, R.drawable.capa1);
         aBackgrounds[0] = new Background(0, 0, "background1_1.png", Background.BackgroundType.LAST_BACKGROUND);
         backgroundWidth = aBackgrounds[0].getWitdh();
-        aBackgrounds[1] = new Background((int) backgroundWidth, 0, "background1_1.png",Background.BackgroundType.LAST_BACKGROUND);
+        aBackgrounds[1] = new Background((int) backgroundWidth, 0, "background1_1.png", Background.BackgroundType.LAST_BACKGROUND);
 
-        aBackgrounds1[0] = new Background(0, 0, "background2_2.png",Background.BackgroundType.FIRST_BACKGROUND);
-        aBackgrounds1[1] = new Background((int)backgroundWidth, 0, "background2_2.png",Background.BackgroundType.FIRST_BACKGROUND);
+        aBackgrounds1[0] = new Background(0, 0, "background2_2.png", Background.BackgroundType.FIRST_BACKGROUND);
+        aBackgrounds1[1] = new Background((int) backgroundWidth, 0, "background2_2.png", Background.BackgroundType.FIRST_BACKGROUND);
 
-		float[] heighs = {height20percent, height40percent, height60percent};
+        float[] heighs = {height20percent, height40percent, height60percent};
 
         // START ENEMIES
-		enemies = new ArrayList<Enemy>();
-		for (int i = 0; i < 20 ; i++) {
-			maxXEnemy += random.nextInt(1000);
-			enemies.add(new Enemy(screenWidth + maxXEnemy,
-					heighs[random.nextInt(3)], "cow.png"));
-		}
+        enemies = new ArrayList<Enemy>();
+        for (int i = 0; i < 20; i++) {
+            maxXEnemy += random.nextInt(1000);
+            enemies.add(new Enemy(screenWidth + maxXEnemy,
+                    heighs[random.nextInt(3)], "cow.png"));
+        }
+        pe = new ParticleEffect();
+        // Init the Character
+        mike = new Mike(width20percent, height20percent, "mikespritesheet.png");
 
-        farmer = new Farmer(width20percent, height20percent, "mikespritesheet.png");
+        pe.load(Gdx.files.internal("esplosionCowsParticle"), Gdx.files.internal(""));
+        pe.getEmitters().first().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        pe.getEmitters().get(1).setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        pe.start();
 
-//		for (int i=0; i<5; i++) {
-//			maxXStraws += random.nextInt(2500);
-//			straws.add(new Enemy(context, screeenWidth+maxXStraws+3000,
-//							height80percent,"straws", R.drawable.straw));
-//		}
+
+        //		for (int i=0; i<5; i++) {
+        //			maxXStraws += random.nextInt(2500);
+        //			straws.add(new Enemy(context, screeenWidth+maxXStraws+3000,
+        //							height80percent,"straws", R.drawable.straw));
+        //		}
 
         // this callback call when the enemies, player and background has been loaded
         this.managerInterface.imagesLoaded();
     }
 
-    // Character
-    public void drawMike(SpriteBatch spriteBatch) {
-        this.farmer.draw(spriteBatch);
-    }
-
-    public void jumpFarmer() {
-        this.farmer.setJumping(true);
-    }
-
-    // Enemy method
-    public void drawEnemies(Batch batch) {
-        for (Enemy e : enemies) {
-            e.drawEnemy(batch);
-        }
-    }
-
-    // Background methods
-    public void drawBackground(Batch batch) {
+    public void draw(SpriteBatch batch) {
+        // First draw the background
         for (Background bc : aBackgrounds) {
             bc.drawBackground(batch);
         }
+
         for (Background bc2 : aBackgrounds1) {
             bc2.drawBackground(batch);
         }
+
+        // Now draw the Enemies
+        for (Enemy e : enemies) {
+            e.drawEnemy(batch);
+        }
+
+        bManager.drawBullets(batch);
+
+        // And finally mike
+        this.mike.draw(batch);
+
+        // Draw the particles
+        /* I need something like particleManage
+        *   load all particles from the class
+        *   but... the x and y? how i know it
+        */
+        this.pe.draw(batch);
+
+        // collissions test
+
     }
 
-//	// Bullets
-//	public void newBullet(float finalX, float finalY) {
-//		if (newBullet /*&& octoApp.getTotalBullets() > 0*/) {
-//			newBullet = false;
-//			bullets.add(new Bullet(mContext,
-//					/* initial X */(int) width20percent
-//							+ farmer.getBitmap().getWidth(),
-//					/* initial Y */(int) farmer.getY() + 90,
-//					/* FINAL X */finalX,
-//					/* FINAL Y */finalY, R.drawable.projectile));
-//
-//			// Sound bullet
-//			timerNewBullet();
-//		}
-//	}
-//
-//	public void timerNewBullet() {
-//		new Runnable() {
-//			@Override
-//			public void run() {
-//				TimerTask task = new TimerTask() {
-//					@Override
-//					public void run() {
-//						Looper.prepare();
-//						newBullet = true;
-//						Looper.loop();
-//					}
-//				};
-//				Timer timer = new Timer();
-//				timer.schedule(task, TIMER_BULLET);
-//			}
-//		}.run();
-//	}
+    public void update() {
+        // First draw the background
+        for (Background bc : aBackgrounds) {
+            bc.updateBackground();
+        }
 
-//	public void drawBullets(final Canvas c) {
-//		final List<Bullet> toRemove = new ArrayList<Bullet>();
-//		new Runnable() {
-//
-//			@Override
-//			public void run() {
-//
-//				for (Bullet b : getBullets()) {
-//					// DRAW the bullets
-//					c.drawBitmap(b.getBitmap(), b.getX(), b.getY(), null);
-//					// MOVE the bullets
-//					b.move();
-//					if (b.getX() >= screenWidth) {
-//						toRemove.add(b);
-//					}
-//				}
-//			}
-//		}.run();
-//
-//		removeBullet(toRemove);
-//	}
+        for (Background bc2 : aBackgrounds1) {
+            bc2.updateBackground();
+        }
 
-//	public void removeBullet(List<Bullet> arg0) {
-//		bullets.removeAll(arg0);
-//	}
+        // Now draw the Enemies
+        for (Enemy e : enemies) {
+            e.updateEnemy();
+        }
 
-//	public List<Bullet> getBullets() {
-//		return bullets;
-//	}
+        bManager.updateBullets();
+
+        // And finally mike
+        this.mike.update();
+
+        this.pe.update(Gdx.graphics.getDeltaTime());
+
+    }
+
+    public void jumpFarmer() {
+        this.mike.setJumping(true);
+    }
+
+    // Bullets
+    public void newBullet(float finalX, float finalY) {
+        bManager.createNewBullet(mike.getX() + mike.getWidth(),
+                mike.getY() + mike.getHeight() / 2 - 50,
+                finalX,
+                finalY);
+    }
+
+
+    //	public void drawBullets(final Canvas c) {
+    //		final List<Bullet> toRemove = new ArrayList<Bullet>();
+    //		new Runnable() {
+    //
+    //			@Override
+    //			public void run() {
+    //
+    //				for (Bullet b : getBullets()) {
+    //					// DRAW the bullets
+    //					c.drawBitmap(b.getBitmap(), b.getX(), b.getY(), null);
+    //					// MOVE the bullets
+    //					b.move();
+    //					if (b.getX() >= screenWidth) {
+    //						toRemove.add(b);
+    //					}
+    //				}
+    //			}
+    //		}.run();
+    //
+    //		removeBullet(toRemove);
+    //	}
+
+    //	public void removeBullet(List<Bullet> arg0) {
+    //		bullets.removeAll(arg0);
+    //	}
+
+    //	public List<Bullet> getBullets() {
+    //		return bullets;
+    //	}
 
     // Utilities
     public Random getRandom() {
@@ -200,7 +218,8 @@ public class ImageManager {
         return this.maxXStraws;
     }
 
-//	public void removeEnemy(List<Enemy> removeEnemies) {
-//		this.enemies.remove(removeEnemies);
-//	}
+
+    //	public void removeEnemy(List<Enemy> removeEnemies) {
+    //		this.enemies.remove(removeEnemies);
+    //	}
 }
