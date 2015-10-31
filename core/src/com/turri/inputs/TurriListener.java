@@ -21,7 +21,7 @@ public class TurriListener implements GestureDetector.GestureListener {
         if (x < Gdx.graphics.getWidth()/4) {
             imageManager.jumpFarmer();
         } else {
-            // Shot anywhere
+            imageManager.newBullet(x, y);
         }
         return false;
     }
