@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Farmer {
+public class Mike {
 
 	private float x;
 	private float y;
@@ -30,7 +30,7 @@ public class Farmer {
 	// un bitmap aparte para las muertes
 	//private Paint paint;
 
-	public Farmer(float x, float y, String resource) {
+	public Mike(float x, float y, String resource) {
 		this.x = x;
 		this.y = y;
 		this.yMin = y;
@@ -46,12 +46,11 @@ public class Farmer {
 	}
 
 	public void draw(SpriteBatch spriteBatch) {
-		// The update to be before the draw, because in the first loop currentFrame is null
-		this.update();
 		spriteBatch.draw(currentFrame, this.x, this.y);
 	}
 
-	private void update() {
+	public void update() {
+		// The update to be before the draw, because in the first loop currentFrame is null
 		stateTime += Gdx.graphics.getDeltaTime();
 		currentFrame = walkAnimation.getKeyFrame(stateTime, true);
 		if (isJumpOn) {
@@ -98,6 +97,7 @@ public class Farmer {
 	public boolean isDead() {
 		return this.dead;
 	}
+
 	public void setJumping(Boolean jump) {
 		// If isJump is true, it means mike is on air
 		if (this.isJumpOn) {
@@ -107,5 +107,12 @@ public class Farmer {
 
 	}
 
+	public float getWidth() {
+		return this.walkFrames[0].getRegionWidth();
+	}
+
+	public float getHeight() {
+		return this.walkFrames[0].getRegionHeight();
+	}
 
 }
