@@ -64,7 +64,6 @@ public class Bullet {
 	}
 
 	public void draw(SpriteBatch batch) {
-				bulletTexture.getWidth()*1.0f, bulletTexture.getHeight()*1.0f, 1f, 1f, rotate,0,0,bulletTexture.getWidth(),bulletTexture.getHeight(),false,false);
 		batch.draw(bulletTexture, /* Texture */
 				this.x, /* x coordinate */
 				this.y, /* y coordinate */
