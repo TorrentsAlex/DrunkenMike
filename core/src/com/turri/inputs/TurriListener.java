@@ -1,12 +1,15 @@
 package com.turri.inputs;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.turri.manager.ImageManager;
 
 /**
- * Created by alex on 12/10/2015.
+ * Created by alex torrents on 12/10/2015.
  */
 public class TurriListener implements GestureDetector.GestureListener {
     ImageManager imageManager;
@@ -21,6 +24,9 @@ public class TurriListener implements GestureDetector.GestureListener {
         if (x < Gdx.graphics.getWidth()/4) {
             imageManager.jumpFarmer();
         } else {
+            // Flip the coordinates because libgdx use (0,0) in left down corner
+            // but the inputs are in left up corner
+            y = Gdx.graphics.getHeight() - y;
             imageManager.newBullet(x, y);
         }
         return false;
