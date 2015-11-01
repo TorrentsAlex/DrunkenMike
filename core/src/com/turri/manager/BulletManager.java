@@ -1,5 +1,6 @@
 package com.turri.manager;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.turri.models.Bullet;
 
@@ -15,7 +16,7 @@ public class BulletManager {
 
     private static BulletManager bManager;
 
-    private static int TIMER_BULLET = 1000;
+    private static int TIMER_BULLET = 500;
 
     private boolean newBullet = true;
 
@@ -23,7 +24,7 @@ public class BulletManager {
     private List<Bullet> bulletsToRemove = new ArrayList<Bullet>();
 
     // The projectile name i use
-    private String projectileString = "projectile.png";
+    private String projectileString = "beerProjectile.png";
 
     private BulletManager() {
 
