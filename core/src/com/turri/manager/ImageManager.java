@@ -91,7 +91,7 @@ public class ImageManager {
         // Init the Character
         mike = new Mike(width20percent, height20percent, "mikespritesheet.png");
 
-        pe.load(Gdx.files.internal("esplosionCowsParticle"), Gdx.files.internal(""));
+        pe.load(Gdx.files.internal("explosionCowsParticle"), Gdx.files.internal(""));
         pe.getEmitters().first().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         pe.getEmitters().get(1).setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         pe.start();
