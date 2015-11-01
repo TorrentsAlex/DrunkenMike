@@ -18,7 +18,7 @@ public class Bullet {
 
 	private Texture bulletTexture;
 
-	private final static float velocity = -1000;
+	private final static float velocity = 1000;
 	float angle;
 
 	public Bullet(float x, float y, float finalX, float finalY, String stringName) {
@@ -30,11 +30,9 @@ public class Bullet {
 		this.bulletTexture = new Texture(stringName);
 
 		// Calculate the trajectory
-		float xDistance = x-finalX;
-		//xDistance = Math.cos(xDistance);
-		
-		float yDistance =  y-finalY;
-		//yDistance = Math.sin(yDistance);
+		float xDistance = finalX - x;
+		float yDistance =  finalY - y;
+
 		angle = MathUtils.atan2(yDistance, xDistance);
 
 	}
@@ -66,10 +64,23 @@ public class Bullet {
 	}
 
 	public void draw(SpriteBatch batch) {
-		//batch.draw(bulletTexture, this.x, this.y);
-		batch.draw(bulletTexture, this.x, this.y, bulletTexture.getWidth()/2.0f,bulletTexture.getHeight()/2.0f,
 				bulletTexture.getWidth()*1.0f, bulletTexture.getHeight()*1.0f, 1f, 1f, rotate,0,0,bulletTexture.getWidth(),bulletTexture.getHeight(),false,false);
-
+		batch.draw(bulletTexture, /* Texture */
+				this.x, /* x coordinate */
+				this.y, /* y coordinate */
+				bulletTexture.getWidth()/2.0f, /* The x-coordinate of the rotation relative to the screen */
+				bulletTexture.getHeight()/2.0f,/* The y-coordinate of the rotation relative to the screen */
+				bulletTexture.getWidth()*1.0f,/* The width */
+				bulletTexture.getHeight()*1.0f,/* The height */
+				1f, /* scale x */
+				1f, /* scale y */
+				rotate, /* The angle of counter rotation*/
+				0, /* the x coordinate who start the texture */
+				0, /* the y coordinate who start the texture */
+				bulletTexture.getWidth(), /* the source in texels */
+				bulletTexture.getHeight(), /* the source in texels*/
+				false, /* Flip horizontally */
+				false);/* Flip vertically */
 
 	}
 
