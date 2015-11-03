@@ -3,8 +3,12 @@ package com.turri.models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.turri.manager.BulletManager;
+
+import java.util.List;
 
 public class Mike {
 
@@ -14,51 +18,92 @@ public class Mike {
 
 	private boolean dead = false;
 
-	private float gravity = -2.5f;
-	private final float velocity = 45;
+	private float gravity = -2f;
+	private final float velocity = 35;
 	private float currentVelocity = velocity;
 
 	private boolean isDoubleJumpOn = false;
 	private boolean isJumpOn = false;
 
-	TextureRegion[] walkFrames;
-	TextureRegion currentFrame;
-	Animation walkAnimation;
+	private TextureRegion[] walkFrames;
+	private TextureRegion currentFrame;
+	private Animation walkAnimation;
 	float stateTime;
-	//private BitmapDrawable[] graphic = new BitmapDrawable[12];
-	// array de bitmaps para los sprites
-	// un bitmap aparte para las muertes
-	//private Paint paint;
+	private BulletManager bManager;
 
-	public Mike(float x, float y, String resource) {
+	private ParticleEffect pe;
+	private boolean isShooting;
+
+	private static int xSpaceGun = 50;
+
+	public Mike(float x, float y, String resource, String particleResource) {
 		this.x = x;
 		this.y = y;
 		this.yMin = y;
+
+		// Animation
 		Texture texture = new Texture(resource);
-		TextureRegion[] tmp = TextureRegion.split(texture ,texture.getWidth()/11 ,texture.getHeight())[0];
+		TextureRegion[][] tmp = TextureRegion.split(texture ,texture.getWidth()/4 ,texture.getHeight()/3);
 		walkFrames = new TextureRegion[11];
-		for (int i=0; i < 11; i++) {
-			walkFrames[i] = tmp[i];
+		int index = 0;
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (index == 11) {
+					break;
+				}
+				walkFrames[index++] = tmp[i][j];
+			}
 		}
 
 		walkAnimation = new Animation(1/11f, walkFrames);
 		stateTime = 0f;
+
+		// Particle
+		pe = new ParticleEffect();
+		pe.load(Gdx.files.internal(particleResource), Gdx.files.internal(""));
+		pe.start();
+
+		this.bManager = BulletManager.shareBulletManager();
+
+	}
+	public float getWidth() {
+		return this.walkFrames[0].getRegionWidth();
+	}
+
+	public float getHeight() {
+		return this.walkFrames[0].getRegionHeight();
 	}
 
 	public void draw(SpriteBatch spriteBatch) {
-		spriteBatch.draw(currentFrame, this.x, this.y);
+		spriteBatch.draw(currentFrame, this.x, this.y, this.getWidth() / 2, this.getHeight() / 2, this.getWidth(), this.getHeight(), 0.8f, 0.8f, 0);
+		if (isShooting) {
+			this.pe.draw(spriteBatch);
+		}
+		bManager.drawBullets(spriteBatch);
 	}
 
 	public void update() {
 		// The update to be before the draw, because in the first loop currentFrame is null
 		stateTime += Gdx.graphics.getDeltaTime();
 		currentFrame = walkAnimation.getKeyFrame(stateTime, true);
+		if (isShooting)  {
+			pe.getEmitters().first().setPosition(this.getWidth()+this.x-xSpaceGun, this.getHeight()/2+this.y);
+			this.pe.update(Gdx.graphics.getDeltaTime());
+		}
+
+		bManager.updateBullets();
+
 		if (isJumpOn) {
 			jump();
+		}
+		if (pe.isComplete()) {
+			isShooting = false;
+			pe.reset();
 		}
 	}
 
 	private void jump() {
+
 		currentVelocity += gravity;
 		this.y += currentVelocity;
 		if (y <= yMin && !dead) {
@@ -104,15 +149,22 @@ public class Mike {
 			this.doubleJump();
 		}
 		this.isJumpOn = jump;
-
 	}
 
-	public float getWidth() {
-		return this.walkFrames[0].getRegionWidth();
+	public void setShooting(boolean shooting) {
+		this.isShooting = shooting;
 	}
 
-	public float getHeight() {
-		return this.walkFrames[0].getRegionHeight();
+
+	public void shoot(float finalX, float finalY) {
+		this.setShooting(true);
+		bManager.createNewBullet(this.getX() + this.getWidth()-xSpaceGun,
+				this.getY() + this.getHeight()/2,
+				finalX,
+				finalY);
 	}
 
+	public List<Bullet> getBullets() {
+		return this.bManager.getBullets();
+	}
 }
