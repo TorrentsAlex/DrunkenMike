@@ -13,7 +13,6 @@ import com.turri.manager.ImageManager;
 public class TurriGame extends ApplicationAdapter implements imageManagerInterface {
 	SpriteBatch batch;
 	ImageManager manager;
-	ParticleEffect pe;
 
 	boolean imagesLoaded = false;
 	private static TurriGame game;
@@ -34,7 +33,6 @@ public class TurriGame extends ApplicationAdapter implements imageManagerInterfa
         manager.loadImages(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.input.setInputProcessor(new GestureDetector(new TurriListener()));
 
-
 	}
 
 	@Override
@@ -43,14 +41,22 @@ public class TurriGame extends ApplicationAdapter implements imageManagerInterfa
 		if (!imagesLoaded) {
 			return;
         }
+
+		drawGame();
+
+	}
+
+	private void drawGame() {
 		manager.update();
 
+		manager.physics();
 
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		manager.draw(batch);
 		batch.end();
+
 	}
 
 	public void imagesLoaded() {
