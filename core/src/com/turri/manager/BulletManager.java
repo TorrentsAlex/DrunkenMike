@@ -39,7 +39,7 @@ public class BulletManager {
 
 
     public void createNewBullet(float originX, float originY, float finalX, float finalY) {
-        if (newBullet /*&& octoApp.getTotalBullets() > 0*/) {
+        if (newBullet) {
             newBullet = false;
             bullets.add(new Bullet(
 			/* initial X */ originX,
@@ -54,21 +54,18 @@ public class BulletManager {
     public void drawBullets(SpriteBatch batch) {
         for (Bullet b : bullets) {
             b.draw(batch);
-            if (b.getRemove()) {
-                this.bulletsToRemove.add(b);
-            }
         }
-        this.bullets.removeAll(this.bulletsToRemove);
     }
 
     public void updateBullets() {
         for (Bullet b : bullets) {
             b.update();
+            if (b.getRemove()) {
+                this.bulletsToRemove.add(b);
+            }
         }
-    }
-
-    private void removeBullets() {
-
+        // Remove all bullets
+        this.bullets.removeAll(this.bulletsToRemove);
     }
 
     private void timerNewBullet() {
@@ -85,6 +82,10 @@ public class BulletManager {
                 timer.schedule(task, TIMER_BULLET);
             }
         }.run();
+    }
+
+    public List<Bullet> getBullets() {
+        return this.bullets;
     }
 
 }
