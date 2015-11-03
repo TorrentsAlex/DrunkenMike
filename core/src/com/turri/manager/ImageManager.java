@@ -12,14 +12,12 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 public class ImageManager {
 
     private static ImageManager imageManager;
 
     private Mike mike;
     private List<Enemy> enemies;
-    private String projectileString;
 
     //	private List<Enemy> straws;
     private Background[] aBackgrounds;
@@ -29,12 +27,10 @@ public class ImageManager {
     private int maxXEnemy = 0;
     private int maxXStraws = 0;
 
-    private BulletManager bManager;
     private Random random;
     private boolean isFinishRunnable = true;
 
     private imageManagerInterface managerInterface;
-    ParticleEffect pe;
 
     public static ImageManager sharedManager() {
         if (imageManager == null) {
@@ -58,7 +54,6 @@ public class ImageManager {
         float height60percent;
         float height80percent;
         random = new Random();
-        this.bManager = BulletManager.shareBulletManager();
 
         width20percent = screenWidth * 0.10f;
 
@@ -85,16 +80,12 @@ public class ImageManager {
         for (int i = 0; i < 20; i++) {
             maxXEnemy += random.nextInt(1000);
             enemies.add(new Enemy(screenWidth + maxXEnemy,
-                    heighs[random.nextInt(3)], "cow.png"));
+                    heighs[random.nextInt(3)], "cow.png", "explosionCowsParticles"));
         }
-        pe = new ParticleEffect();
         // Init the Character
-        mike = new Mike(width20percent, height20percent, "mikespritesheet.png");
+        mike = new Mike(width20percent, height20percent, "RunAnimation.png", "fire");
 
-        pe.load(Gdx.files.internal("explosionCowsParticle"), Gdx.files.internal(""));
-        pe.getEmitters().first().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-        pe.getEmitters().get(1).setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-        pe.start();
+
 
 
         //		for (int i=0; i<5; i++) {
@@ -122,17 +113,14 @@ public class ImageManager {
             e.drawEnemy(batch);
         }
 
-        bManager.drawBullets(batch);
-
         // And finally mike
         this.mike.draw(batch);
 
         // Draw the particles
         /* I need something like particleManage
         *   load all particles from the class
-        *   but... the x and y? how i know it
+        *   but... the x and y? how i know it?
         */
-        this.pe.draw(batch);
 
         // collissions test
 
@@ -153,13 +141,21 @@ public class ImageManager {
             e.updateEnemy();
         }
 
-        bManager.updateBullets();
-
         // And finally mike
         this.mike.update();
+    }
 
-        this.pe.update(Gdx.graphics.getDeltaTime());
-
+    public void physics() {
+        List<Bullet> bullets = this.mike.getBullets();
+        for (Bullet bullet : bullets) {
+            for (Enemy e: enemies) {
+                if(CollisionDetector.getCollision(bullet, e)) {
+                    Gdx.app.log("mike","return true collision detector");
+                    e.setDead();
+                    bullet.stop();
+                }
+            }
+        }
     }
 
     public void jumpFarmer() {
@@ -168,42 +164,8 @@ public class ImageManager {
 
     // Bullets
     public void newBullet(float finalX, float finalY) {
-        bManager.createNewBullet(mike.getX() + mike.getWidth(),
-                mike.getY() + mike.getHeight() / 2 - 50,
-                finalX,
-                finalY);
+      this.mike.shoot(finalX, finalY);
     }
-
-
-    //	public void drawBullets(final Canvas c) {
-    //		final List<Bullet> toRemove = new ArrayList<Bullet>();
-    //		new Runnable() {
-    //
-    //			@Override
-    //			public void run() {
-    //
-    //				for (Bullet b : getBullets()) {
-    //					// DRAW the bullets
-    //					c.drawBitmap(b.getBitmap(), b.getX(), b.getY(), null);
-    //					// MOVE the bullets
-    //					b.move();
-    //					if (b.getX() >= screenWidth) {
-    //						toRemove.add(b);
-    //					}
-    //				}
-    //			}
-    //		}.run();
-    //
-    //		removeBullet(toRemove);
-    //	}
-
-    //	public void removeBullet(List<Bullet> arg0) {
-    //		bullets.removeAll(arg0);
-    //	}
-
-    //	public List<Bullet> getBullets() {
-    //		return bullets;
-    //	}
 
     // Utilities
     public Random getRandom() {
