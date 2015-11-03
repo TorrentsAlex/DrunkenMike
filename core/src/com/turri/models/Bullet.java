@@ -92,4 +92,7 @@ public class Bullet {
 		this.rotate();
 	}
 
+	public void stop() {
+		this.remove = true;
+	}
 }
