@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.turri.manager.GameState;
 import com.turri.manager.ImageManager;
 
 /**
@@ -13,14 +14,20 @@ import com.turri.manager.ImageManager;
  */
 public class TurriListener implements GestureDetector.GestureListener {
     ImageManager imageManager;
+    private GameState gameState;
 
     public TurriListener() {
         imageManager = ImageManager.sharedManager();
+        gameState = GameState.sharedState();
     }
 
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
-        // Cut the screen in 4 segments, the first segment, the left, is for mike actions
+        if (gameState.getGameState() == GameState.MENU) {
+            gameState.setState(GameState.PLAY);
+            return false;
+        }
+        // Cut the screen in 4 segments, the first segment, the left, is for mike action
         if (x < Gdx.graphics.getWidth()/4) {
             imageManager.jumpFarmer();
         } else {
