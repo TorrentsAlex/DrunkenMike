@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 public class Background {
 	private int x;
 	private int y;
+	private int initialX;
 	private Texture background;
 	private int backgroundType;
 
@@ -18,6 +19,7 @@ public class Background {
 	public Background (int x, int y, String resource, int backgroundType) {
 		this.x = x;
 		this.y = y;
+		this.initialX = x;
 		this.background = new Texture(resource);
 		this.backgroundType = backgroundType;
 	}
