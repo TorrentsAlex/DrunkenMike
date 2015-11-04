@@ -12,6 +12,8 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.turri.models.Background.*;
+
 public class ImageManager {
 
     private static ImageManager imageManager;
@@ -22,6 +24,10 @@ public class ImageManager {
     //	private List<Enemy> straws;
     private Background[] aBackgrounds;
     private Background[] aBackgrounds1;
+    private Background[] aBackgrounds2;
+    private Background[] aBackgrounds3;
+
+
     private float backgroundWidth = 0;
 
     private int maxXEnemy = 0;
@@ -65,13 +71,24 @@ public class ImageManager {
         // capa1
         aBackgrounds = new Background[2];
         aBackgrounds1 = new Background[2];
-        //Background background = new Background(context, 0, 0, R.drawable.capa1);
-        aBackgrounds[0] = new Background(0, 0, "background1_1.png", Background.BackgroundType.LAST_BACKGROUND);
-        backgroundWidth = aBackgrounds[0].getWitdh();
-        aBackgrounds[1] = new Background((int) backgroundWidth, 0, "background1_1.png", Background.BackgroundType.LAST_BACKGROUND);
+        aBackgrounds2 = new Background[3];
+        aBackgrounds3 = new Background[2];
 
-        aBackgrounds1[0] = new Background(0, 0, "background2_2.png", Background.BackgroundType.FIRST_BACKGROUND);
-        aBackgrounds1[1] = new Background((int) backgroundWidth, 0, "background2_2.png", Background.BackgroundType.FIRST_BACKGROUND);
+        //Background background = new Background(context, 0, 0, R.drawable.capa1);
+        aBackgrounds[0] = new Background(0, 0, "background1_1.png", BackgroundType.LAST_BACKGROUND);
+        backgroundWidth = aBackgrounds[0].getWitdh();
+        aBackgrounds[1] = new Background((int) backgroundWidth, 0, "background1_2.png", BackgroundType.LAST_BACKGROUND);
+
+        aBackgrounds1[0] = new Background(0, 0, "background2_1.png", BackgroundType.MIDDLE_BACKGROUND);
+        aBackgrounds1[1] = new Background((int) backgroundWidth, 0, "background.png", BackgroundType.MIDDLE_BACKGROUND);
+
+        aBackgrounds2[0] = new Background(0,0, "background3_1.png", BackgroundType.FIRST_BACKGROUND);
+        aBackgrounds2[1] = new Background((int) backgroundWidth,0, "background3_2.png", BackgroundType.FIRST_BACKGROUND);
+        aBackgrounds2[2] = new Background((int) backgroundWidth*2,0, "background3_3.png", BackgroundType.FIRST_BACKGROUND);
+
+        aBackgrounds3[0] = new Background(0,20, "Vallas.png", BackgroundType.FIRST_BACKGROUND);
+        aBackgrounds3[1] = new Background(2600,20, "Vallas.png", BackgroundType.FIRST_BACKGROUND);
+
 
         float[] heighs = {height20percent, height40percent, height60percent};
 
@@ -83,7 +100,7 @@ public class ImageManager {
                     heighs[random.nextInt(3)], "cow.png", "explosionCowsParticles"));
         }
         // Init the Character
-        mike = new Mike(width20percent, height20percent, "RunAnimation.png", "fire");
+        mike = new Mike(width20percent, height20percent-50, "RunAnimation.png", "fire");
 
 
 
@@ -108,6 +125,10 @@ public class ImageManager {
             bc2.drawBackground(batch);
         }
 
+        for (Background bc: aBackgrounds2) {
+            bc.drawBackground(batch);
+        }
+
         // Now draw the Enemies
         for (Enemy e : enemies) {
             e.drawEnemy(batch);
@@ -124,6 +145,11 @@ public class ImageManager {
 
         // collissions test
 
+        // Draw vallas
+        for (Background bc: aBackgrounds3) {
+            bc.drawBackground(batch);
+        }
+
     }
 
     public void update() {
@@ -136,6 +162,12 @@ public class ImageManager {
             bc2.updateBackground();
         }
 
+        for (Background bc: aBackgrounds2) {
+            bc.updateBackground();
+        }
+        for (Background bc: aBackgrounds3) {
+            bc.updateBackground();
+        }
         // Now draw the Enemies
         for (Enemy e : enemies) {
             e.updateEnemy();
