@@ -71,7 +71,7 @@ public class Enemy {
 		this.restartEnemy();
 		if (isDead) {
 			this.deadParticle.getEmitters().first().setPosition(this.getWidth()/2+this.x, this.getHeight()/2+this.y);
-			this.deadParticle.getEmitters().get(1).setPosition(this.getWidth()/2+this.x, this.getHeight() / 2 + this.y);
+			this.deadParticle.getEmitters().get(1).setPosition(this.getWidth()/2+this.x, this.getHeight()/2+this.y);
 			this.deadParticle.update(Gdx.graphics.getDeltaTime());
 		}
 	}
