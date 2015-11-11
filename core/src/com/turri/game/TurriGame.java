@@ -2,8 +2,10 @@ package com.turri.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.turri.inputs.TurriListener;
 import com.turri.interfaces.imageManagerInterface;
@@ -19,6 +21,8 @@ public class TurriGame extends ApplicationAdapter implements imageManagerInterfa
 	private GameState gameState;
 	private Menu menu;
 
+	private ShapeRenderer sRender;
+
 	public static TurriGame sharedGame() {
 		if (game == null) {
 			game = new TurriGame();
@@ -31,11 +35,13 @@ public class TurriGame extends ApplicationAdapter implements imageManagerInterfa
 		gameState.setState(GameState.MENU);
 		batch = new SpriteBatch();
 		menu = new Menu();
+		sRender = new ShapeRenderer();
 
 		manager = ImageManager.sharedManager();
         manager.setImageManagerInterface(this);
-        manager.loadImages(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.input.setInputProcessor(new GestureDetector(new TurriListener()));
+		manager.loadImages(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 	}
 
 	@Override
@@ -63,18 +69,33 @@ public class TurriGame extends ApplicationAdapter implements imageManagerInterfa
 	}
 
 	private void drawGame() {
+
 		manager.update();
 
 		manager.physics();
 
 		clearScreen();
+
+		manager.drawBackground();
+
+		//collisionDebugDraw();
+
 		batch.begin();
 		manager.draw(batch);
 		batch.end();
+		manager.drawForeGround();
 
 	}
 
+	private void collisionDebugDraw() {
+		sRender.begin(ShapeRenderer.ShapeType.Filled);
+		sRender.setColor(Color.RED);
+		manager.debugDrawCollisions(sRender);
+		sRender.end();
+	}
+
 	public void imagesLoaded() {
+		Gdx.app.log("Mike", "imagesLoaded");
 		imagesLoaded = true;
 	}
 
