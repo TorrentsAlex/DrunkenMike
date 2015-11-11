@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class Background {
-	private int x;
-	private int y;
-	private int initialX;
+	private float x;
+	private float y;
+	private float initialX;
 	private Texture background;
 	private int backgroundType;
 
@@ -16,7 +16,7 @@ public class Background {
 		static int FIRST_BACKGROUND = 2;
 	}
 
-	public Background (int x, int y, String resource, int backgroundType) {
+	public Background (float x, float y, String resource, int backgroundType) {
 		this.x = x;
 		this.y = y;
 		this.initialX = x;
@@ -24,7 +24,7 @@ public class Background {
 		this.backgroundType = backgroundType;
 	}
 
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 
@@ -32,11 +32,11 @@ public class Background {
 		return this.background;
 	}
 	
-	public int getX() {
+	public float getX() {
 		return this.x;
 	}
 
-	public int getWitdh() {
+	public float getWitdh() {
 		return this.background.getWidth();
 	}
 
