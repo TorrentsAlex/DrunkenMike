@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
 import com.turri.manager.BulletManager;
 
 import java.util.List;
@@ -33,6 +34,8 @@ public class Mike {
 
 	private ParticleEffect pe;
 	private boolean isShooting;
+
+	private Circle boundingCircle;
 
 	private static int xSpaceGun = 50;
 
@@ -64,7 +67,7 @@ public class Mike {
 		pe.start();
 
 		this.bManager = BulletManager.shareBulletManager();
-
+		boundingCircle = new Circle();
 	}
 	public float getWidth() {
 		return this.walkFrames[0].getRegionWidth();
@@ -100,10 +103,11 @@ public class Mike {
 			isShooting = false;
 			pe.reset();
 		}
+		boundingCircle.set(x+getWidth()/3f, y+getHeight()/2f, getWidth()/3f);
+
 	}
 
 	private void jump() {
-
 		currentVelocity += gravity;
 		this.y += currentVelocity;
 		if (y <= yMin && !dead) {
@@ -133,6 +137,10 @@ public class Mike {
 
 	public float getY() {
 		return y;
+	}
+
+	public Circle getBoundingCircle() {
+		return this.boundingCircle;
 	}
 
 	public void setDead(boolean dead) {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Bullet {
@@ -21,6 +22,8 @@ public class Bullet {
 	private final static float velocity = 1000;
 	float angle;
 
+	private Circle boundleCircle;
+
 	public Bullet(float x, float y, float finalX, float finalY, String stringName) {
 		this.x = x;
 		this.y = y;
@@ -34,7 +37,7 @@ public class Bullet {
 		float yDistance =  finalY - y;
 
 		angle = MathUtils.atan2(yDistance, xDistance);
-
+		boundleCircle = new Circle();
 	}
 	
 	public float getX() {
@@ -83,7 +86,11 @@ public class Bullet {
 
 	}
 
+	public Circle getBoundleCircle() {
+		return this.boundleCircle;
+	}
 	public void update() {
+		boundleCircle.set(x+getWidth()/2, y+ getHeight()/2f, getWidth()/2f);
 		// Set to remove if pass the screenwidth
 		if (this.x > Gdx.graphics.getWidth()) {
 				this.remove = true;
@@ -94,5 +101,13 @@ public class Bullet {
 
 	public void stop() {
 		this.remove = true;
+	}
+
+	public int getHeight() {
+		return bulletTexture.getHeight();
+	}
+
+	public float getWidth() {
+		return bulletTexture.getWidth();
 	}
 }

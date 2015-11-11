@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Enemy {
 	private float x;
@@ -13,7 +15,9 @@ public class Enemy {
 	private Texture spriteTexture;
 	private ParticleEffect deadParticle;
 	private boolean isDead = false;
-	private float velocity = 10;
+	private float velocity = 8;
+
+	private Rectangle boundingCircle;
 
 	public Enemy (float x, float y, String resource, String particleResource ) {
 		this.x = x;
@@ -22,6 +26,7 @@ public class Enemy {
 		deadParticle = new ParticleEffect();
 		deadParticle.load(Gdx.files.internal(particleResource), Gdx.files.internal(""));
 		deadParticle.start();
+		boundingCircle = new Rectangle();
 	}
 
 	private void setX(float x) {
@@ -42,6 +47,10 @@ public class Enemy {
 
 	public int getHeight() {
 		return spriteTexture.getHeight();
+	}
+
+	public Rectangle getBoundingCircle() {
+		return this.boundingCircle;
 	}
 
 	private Texture getTexture() {
@@ -67,6 +76,7 @@ public class Enemy {
 	}
 
 	public void updateEnemy() {
+		boundingCircle.set(x, y+getHeight()/4, getWidth()/2, getHeight()/2);
 		this.moveEnemy();
 		this.restartEnemy();
 		if (isDead) {
@@ -81,5 +91,33 @@ public class Enemy {
 	}
 	public boolean getDead() {
 		return this.isDead;
+	}
+
+	/**
+	 *
+	 * @return if the enemy finished all once dead
+	 */
+	public boolean getFinished() {
+		if (this.x < 0) {
+			return true;
+		}
+		if (isDead) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 *
+	 * @param maxXEnemy the x max enemies
+	 * @param heigh the altitud we put the enemy
+	 */
+	public void restart(float maxXEnemy, float heigh) {
+		this.x = maxXEnemy + (float)Math.random()*1000;
+		this.y = heigh;
+	}
+
+	public void setVelocity(float velocity) {
+		this.velocity = velocity;
 	}
 }
